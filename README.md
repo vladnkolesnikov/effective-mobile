@@ -9,7 +9,11 @@ docker compose up --build
 ## Добавить пользователя
 
 ```sh
-curl http://localhost:8080/users -X POST -d '{ "first_name": "Ivan", "last_name": "Ivanov" }'
+curl http://localhost:8080/users -X POST -d \
+'{
+    "first_name": "Ivan",
+    "last_name": "Ivanov"
+}'
 ```
 
 ## Добавить подписку
