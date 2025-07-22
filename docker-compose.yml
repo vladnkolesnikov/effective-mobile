@@ -1,0 +1,27 @@
+version: "3.8"
+
+name: em-backend
+
+services:
+  db:
+    env_file:
+      - ./.env
+    container_name: "em_db"
+    image: postgres:17.5-alpine
+    volumes:
+      - db-data:/var/lib/postgresql/data:rw
+    ports:
+      - ${PG_DB_PORT}:5432
+    environment:
+      POSTGRES_DB: ${PG_DB_NAME}
+      POSTGRES_USER: ${PG_DB_USER}
+      POSTGRES_PASSWORD: ${PG_DB_PASSWORD}
+    restart: unless-stopped
+
+volumes:
+  db-data:
+    labels:
+      - "./database/postgres-data"
+  test-db-data:
+    labels:
+      - "./database/postgres-test-data"
