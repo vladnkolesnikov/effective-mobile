@@ -35,7 +35,15 @@ curl http://localhost:8080/subscriptions -X POST -d \
 ## Вернуть общую стоимость всех подписок в период startDate до endDate
 
 ```sh
-curl http://localhost:8080/subscriptions/cost?userId=<USER_ID>&serviceName=<SERVICE_NAME>&startDate=date_1&endDate=date_2
+curl http://localhost:8080/subscriptions/cost
+```
+
+Со следующими GET-параметрами:
+```
+userId=<USER_ID>
+serviceName=<SERVICE_NAME>
+startDate=01-2025
+endDate=07-2025
 ```
 
 - `endDate` можно опустить, тогда будет установлена текущая дата
