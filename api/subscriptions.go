@@ -133,7 +133,7 @@ func (sh *SubscriptionsHandler) HandleCreateSubscription(w http.ResponseWriter, 
 		return
 	}
 
-	if subscription.StartDate.IsInFuture() {
+	if subscription.StartDate.InFuture() {
 		err := errors.New("startDate cannot be in the future")
 		logger.LogError("CreateSubscription: invalid startDate query value", err)
 		utils.WriteResponse(w, http.StatusBadRequest, utils.Envelope{"error": err.Error()})
