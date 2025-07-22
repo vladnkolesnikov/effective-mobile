@@ -7,6 +7,7 @@ import (
 	"encoding/json"
 	"errors"
 	"net/http"
+	"time"
 
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -88,14 +89,19 @@ func (sh *SubscriptionsHandler) HandleGetTotalSubscriptionCost(w http.ResponseWr
 	if serviceName == "" {
 		err := errors.New("serivce name is required")
 		logger.LogError("GetTotalSubscriptionCost: serviceName is missing", err)
-		utils.WriteResponse(w, http.StatusBadRequest, utils.Envelope{"error": err.Error()})
+		utils.WriteResponse(w, http.StatusBadRequest, utils.Envelope{"error": "serviceName is required"})
 		return
 	}
 
 	rangeStartDate := utils.CustomDate{}
 	if err := rangeStartDate.ParseQueryDate(startDate, true); err != nil {
+		var parseError *time.ParseError
+		var errorMessage = err.Error()
+		if errors.As(err, &parseError) {
+			errorMessage = "Invalid startDate"
+		}
 		logger.LogError("GetTotalSubscriptionCost: failed to parse startDate", err)
-		utils.WriteResponse(w, http.StatusBadRequest, utils.Envelope{"error": "invalid startDate"})
+		utils.WriteResponse(w, http.StatusBadRequest, utils.Envelope{"error": errorMessage})
 		return
 	}
 
