@@ -62,6 +62,6 @@ func (sd *CustomDate) ParseQueryDate(date string, isRequred bool) error {
 	return nil
 }
 
-func (sd *CustomDate) IsInFuture() bool {
+func (sd *CustomDate) InFuture() bool {
 	return time.Now().Before(sd.Time)
 }
