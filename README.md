@@ -1,6 +1,6 @@
 # Effective Mobile test assesment
 
-Порт приложения `8080` (указан в конфиге .env)
+Порт приложения `APP_PORT=3001` (указан в конфиге .env)
 
 ```bash
 docker compose up --build
@@ -9,7 +9,7 @@ docker compose up --build
 ## Добавить пользователя
 
 ```bash
-curl http://localhost:8080/users -X POST -d \
+curl http://localhost:3001/users -X POST -d \
 '{
     "first_name": "Ivan",
     "last_name": "Ivanov"
@@ -21,7 +21,7 @@ curl http://localhost:8080/users -X POST -d \
 С id, полученным из предыдущего запроса, вызвать:
 
 ```bash
-curl http://localhost:8080/subscriptions -X POST -d \
+curl http://localhost:3001/subscriptions -X POST -d \
 '{
     "user_id": <USER_ID>,
     "service_name": "Yandex Plus",
@@ -35,7 +35,7 @@ curl http://localhost:8080/subscriptions -X POST -d \
 ## Вернуть общую стоимость всех подписок в период startDate до endDate
 
 ```sh
-curl http://localhost:8080/subscriptions/cost
+curl http://localhost:3001/subscriptions/cost
 ```
 
 Со следующими GET-параметрами:
