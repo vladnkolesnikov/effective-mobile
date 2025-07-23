@@ -11,20 +11,19 @@ import (
 )
 
 func Open() (*sql.DB, error) {
-	dbPort := os.Getenv("PG_DB_PORT")
-	dbHost := os.Getenv("PG_DB_HOST")
-	dbName := os.Getenv("PG_DB_NAME")
-	dbUser := os.Getenv("PG_DB_USER")
-	dbPassword := os.Getenv("PG_DB_PASSWORD")
+	dbHost := os.Getenv("DB_HOST")
+	dbName := os.Getenv("DB_NAME")
+	dbUser := os.Getenv("DB_USER")
+	dbPassword := os.Getenv("DB_PASSWORD")
 
 	connectionString := fmt.Sprintf(
-		"host=%s user=%s password=%s dbname=%s port=%s sslmode=disable",
+		"host=%s user=%s password=%s dbname=%s port=5432 sslmode=disable",
 		dbHost,
 		dbUser,
 		dbPassword,
 		dbName,
-		dbPort,
 	)
+
 	db, err := sql.Open("pgx", connectionString)
 
 	if err != nil {

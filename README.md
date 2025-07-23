@@ -2,13 +2,13 @@
 
 Порт приложения `8080` (указан в конфиге .env)
 
-```sh
+```bash
 docker compose up --build
 ```
 
 ## Добавить пользователя
 
-```sh
+```bash
 curl http://localhost:8080/users -X POST -d \
 '{
     "first_name": "Ivan",
@@ -20,7 +20,7 @@ curl http://localhost:8080/users -X POST -d \
 
 С id, полученным из предыдущего запроса, вызвать:
 
-```sh
+```bash
 curl http://localhost:8080/subscriptions -X POST -d \
 '{
     "user_id": <USER_ID>,
@@ -34,6 +34,7 @@ curl http://localhost:8080/subscriptions -X POST -d \
 
 ## Вернуть общую стоимость всех подписок в период startDate до endDate
 
+<<<<<<< HEAD
 ```sh
 curl http://localhost:8080/subscriptions/cost
 ```
@@ -44,6 +45,10 @@ userId=<USER_ID>
 serviceName=<SERVICE_NAME>
 startDate=01-2025
 endDate=07-2025
+=======
+```bash
+curl http://localhost:8080/subscriptions/cost?userId=<USER_ID>&serviceName=<SERVICE_NAME>&startDate=date_1&endDate=date_2
+>>>>>>> 7b4a8a3 (Get rid of env package)
 ```
 
 - `endDate` можно опустить, тогда будет установлена текущая дата

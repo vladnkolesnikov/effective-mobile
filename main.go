@@ -5,21 +5,13 @@ import (
 	"effective-mobile/logger"
 	"effective-mobile/routes"
 	"fmt"
-	"github.com/joho/godotenv"
-	"log"
 	"net/http"
-	"os"
 	"time"
 )
 
+const PORT = 3000
+
 func main() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
-
-	var port = os.Getenv("APP_PORT")
-
 	application, err := app.NewApplication()
 
 	if err != nil {
@@ -34,13 +26,13 @@ func main() {
 		}
 	}()
 
-	logger.LogInfo(fmt.Sprintf("Starting application on port %s", port))
+	logger.LogInfo(fmt.Sprintf("Starting application on port %d", PORT))
 
 	// create router
 	router := routes.InitRoutes(application)
 
 	server := http.Server{
-		Addr:         fmt.Sprintf("localhost:%s", port),
+		Addr:         fmt.Sprintf("0.0.0.0:%d", PORT),
 		IdleTimeout:  time.Minute,
 		ReadTimeout:  10 * time.Second,
 		WriteTimeout: 30 * time.Second,
