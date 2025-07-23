@@ -13,12 +13,12 @@ type CustomDate struct {
 	pgtype.Date
 }
 
-const DateLayout = "01-2006"
+const dateLayout = "01-2006"
 
 // Converts date string from MM-YYYY format to Time
 func (sd *CustomDate) UnmarshalJSON(b []byte) error {
 	plainDate := strings.Trim(string(b), "\"")
-	result, err := time.Parse(DateLayout, plainDate)
+	result, err := time.Parse(dateLayout, plainDate)
 
 	if err != nil {
 		return err
@@ -35,14 +35,14 @@ func (sd CustomDate) MarshalJSON() ([]byte, error) {
 		return []byte("null"), nil
 	}
 
-	s := sd.Time.Format(DateLayout)
+	s := sd.Time.Format(dateLayout)
 
 	return json.Marshal(s)
 }
 
-func (sd *CustomDate) ParseQueryDate(date string, isRequred bool) error {
+func (sd *CustomDate) ParseQueryDate(date string, isRequired bool) error {
 	if date == "" {
-		if isRequred {
+		if isRequired {
 			return errors.New("date is required")
 		}
 		sd.Time = time.Now()
@@ -51,7 +51,7 @@ func (sd *CustomDate) ParseQueryDate(date string, isRequred bool) error {
 		return nil
 	}
 
-	parsedDate, err := time.Parse(DateLayout, date)
+	parsedDate, err := time.Parse(dateLayout, date)
 	if err != nil {
 		return err
 	}
