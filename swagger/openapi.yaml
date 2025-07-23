@@ -1,0 +1,372 @@
+openapi: 3.0.0
+info:
+  title: Effective Mobile - OpenAPI 3.0
+  description: |-
+    Тестовое задание
+  version: 1.0.0
+servers:
+  - url: http://localhost:3001
+tags:
+  - name: Users
+    description: Create, get users
+  - name: Subscriptions
+    description: Create, get subscriptions
+
+paths:
+  /users:
+    post:
+      tags:
+        - Users
+      summary: Create new user.
+      description: Create new user.
+      operationId: addUser
+      requestBody:
+        $ref: "#/components/requestBodies/UserRequest"
+
+      responses:
+        "201":
+          $ref: "#/components/responses/UserResponse"
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
+
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Get user by ID.
+      operationId: getUserById
+      parameters:
+        - name: id
+          in: path
+          description: UserId
+          required: true
+          schema:
+            type: string
+      responses:
+        "200":
+          $ref: "#/components/responses/UserResponse"
+        "404":
+          $ref: "#/components/responses/NotFoundResponse"
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
+
+  /subscriptions:
+    get:
+      tags:
+        - Subscriptions
+      summary: Get user subscriptions.
+      description: Get user subscriptions filtered by user ID, service name, and date range.
+      operationId: getUserSubscriptions
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+        - $ref: '#/components/parameters/ServiceName'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+      responses:
+        "200":
+          $ref: "#/components/responses/SubscriptionsResponse"
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
+
+    post:
+      tags:
+        - Subscriptions
+      summary: Create subscription.
+      description: Create subscription.
+      operationId: createUserSubscription
+      requestBody:
+        $ref: "#/components/requestBodies/SubscriptionRequest"
+        
+      responses:
+        "201":
+          $ref: "#/components/responses/SubscriptionCreatedResponse"
+        "400":
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          $ref: '#/components/responses/InternalServerError'
+
+  /subscriptions/cost:
+    get:
+      tags:
+        - Subscriptions
+      summary: Get total subscription cost.
+      description: Get the total cost of subscriptions for a user, filtered by service name and date range.
+      operationId: getTotalSubscriptionCost
+      parameters:
+        - $ref: '#/components/parameters/UserId'
+        - $ref: '#/components/parameters/ServiceName'
+        - $ref: '#/components/parameters/StartDate'
+        - $ref: '#/components/parameters/EndDate'
+      responses:
+        "200":
+          $ref: "#/components/responses/SubscriptionsTotalCostResponse"
+        "400":
+          $ref: '#/components/responses/BadRequest'
+        "500":
+          $ref: '#/components/responses/InternalServerError'
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        user:
+          required:
+            - id
+            - first_name
+            - last_name
+            - created_at
+            - updated_at
+          properties:
+            id:
+              type: string
+              format: uuid
+              example: 48d67035-ca5e-43e5-b772-6d80a95bd4d4
+
+            first_name:
+              type: string
+              example: Ivan
+
+            last_name:
+              type: string
+              example: Ivanov
+
+            created_at:
+              type: string
+              format: timestamptz
+              example: 2025-07-23T15:07:36.989244Z
+
+            updated_at:
+              type: string
+              format: timestamptz
+              example: 2025-07-23T15:07:36.989244Z
+
+    UserPayload:
+      type: object
+      required:
+        - first_name
+        - last_name
+
+      properties:
+        first_name:
+          type: string
+          example: Ivan
+
+        last_name:
+          type: string
+          example: Ivanov
+
+    Subscription:
+      type: object
+      required:
+        - subscription
+      properties:
+        subscription:
+          type: object
+          required:
+            - id
+            - service_name
+            - price
+            - user_id
+            - start_date
+            - created_at
+            - updated_at
+          properties:
+            id:
+              type: string
+              format: uuid
+              example: 8ef378cc-3841-4c98-a3ce-ac9b67bbef7a
+
+            service_name:
+              type: string
+              example: Yandex Plus
+
+            price:
+              type: integer
+              example: 400
+
+            user_id:
+              type: string
+              format: uuid
+              example: 48d67035-ca5e-43e5-b772-6d80a95bd4d4
+
+            start_date:
+              type: string
+              format: MM-YYYY
+              example: 02-2025
+
+            expiration_date:
+              type: string
+              format: MM-YYYY
+              example: 04-2025
+              nullable: true
+
+            created_at:
+              type: string
+              format: timestamptz
+              example: 2025-07-23T15:07:36.989244Z
+
+            updated_at:
+              type: string
+              format: timestamptz
+              example: 2025-07-23T15:07:36.989244Z
+
+    SubscriptionCost:
+      type: object
+      required:
+        - total_cost
+      properties:
+        total_cost:
+          type: integer
+          example: 1200
+
+    SubscriptionPayload:
+      type: object
+      required:
+        - price
+        - user_id
+        - service_name
+        - start_date
+
+      properties:
+        service_name:
+          type: string
+          example: Yandex Plus
+
+        price:
+          type: integer
+          example: 400
+
+        user_id:
+          type: string
+          format: uuid
+          example: 48d67035-ca5e-43e5-b772-6d80a95bd4d4
+
+        start_date:
+          type: string
+          format: MM-YYYY
+          example: 02-2025
+
+        expiration_date:
+          type: string
+          format: MM-YYYY
+          example: 04-2025
+          nullable: true
+          
+    Error:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+
+  requestBodies:
+    SubscriptionRequest:
+      description: Subscription that needs to be created
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: '#/components/schemas/Subscription'
+
+    UserRequest:
+      description: User that needs to be created
+      required: true
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/UserPayload"
+
+  parameters:
+    UserId:
+      name: user_id
+      in: query
+      description: User ID (UUID)
+      required: true
+      schema:
+        type: string
+        format: uuid
+        
+    ServiceName:
+      name: service_name
+      in: query
+      description: Name of the subscription service
+      required: true
+      schema:
+        type: string
+
+    StartDate:
+      in: query
+      name: start_date
+      description: Start date for filtering subscriptions (inclusive), format MM-YYYY
+      required: true
+      schema:
+        type: string
+        format: MM-YYYY
+
+    EndDate:
+      name: end_date
+      in: query
+      description: End date for filtering subscriptions (exclusive), format MM-YYYY
+      schema:
+        type: string
+        format: MM-YYYY
+
+  responses:
+    UserResponse:
+      description: Successful request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/User"
+
+    SubscriptionsResponse:
+      description: Successful request
+      content:
+        application/json:
+          schema:
+            type: array
+            items:
+              $ref: "#/components/schemas/Subscription"
+
+    SubscriptionCreatedResponse:
+      description: Successful request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Subscription"
+
+    SubscriptionsTotalCostResponse:
+      description: Successful request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/SubscriptionCost"
+
+    NotFoundResponse:
+      description: Not found
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    BadRequest:
+      description: Bad request
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
+
+    InternalServerError:
+      description: Internal Server Error
+      content:
+        application/json:
+          schema:
+            $ref: "#/components/schemas/Error"
