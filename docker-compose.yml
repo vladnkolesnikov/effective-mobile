@@ -32,6 +32,18 @@ services:
     restart: unless-stopped
     networks:
       - backend
+#
+#  api-specs:
+#    container_name: api-specs-ui
+#    image: swaggerapi/swagger-ui:v5.17.14
+#    environment:
+#      SWAGGER_JSON: /swagger/openapi.yaml
+#    ports:
+#      - "${SPECS_PORT}:8080"
+#    volumes:
+#      - ./swagger:/specs
+#    depends_on:
+#      - app
 
 volumes:
   db-data:

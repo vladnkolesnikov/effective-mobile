@@ -5,6 +5,8 @@
 ```bash
 docker compose up --build
 ```
+### SWAGGER
+http://localhost:3001/swagger
 
 ## Добавить пользователя
 
