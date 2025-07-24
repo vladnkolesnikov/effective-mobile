@@ -38,6 +38,7 @@ func NewApplication() (*Application, error) {
 	app := &Application{
 		UsersHandler:         usersHandler,
 		SubscriptionsHandler: subscriptionsHandler,
+		DB:                   pgDB,
 	}
 
 	return app, nil
