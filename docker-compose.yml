@@ -32,6 +32,21 @@ services:
     restart: unless-stopped
     networks:
       - backend
+
+  test-db:
+    container_name: pg-db-test
+    image: postgres:17.5-alpine
+    volumes:
+      - test-db-data:/var/lib/postgresql/data:rw
+    ports:
+      - "5433:5432"
+    env_file:
+      - ./.env
+    environment:
+      POSTGRES_DB: ${DB_NAME_TEST}
+      POSTGRES_USER: ${DB_USER_TEST}
+      POSTGRES_PASSWORD: ${DB_PASSWORD_TEST}
+    restart: unless-stopped
 #
 #  api-specs:
 #    container_name: api-specs-ui
@@ -49,6 +64,9 @@ volumes:
   db-data:
     labels:
       - "./database/postgres-data"
+  test-db-data:
+    labels:
+      - "./database/postgres-test-data"
 
 networks:
   backend:
