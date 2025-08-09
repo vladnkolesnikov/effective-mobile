@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/fs"
 	"os"
+	"testing"
 
 	_ "github.com/jackc/pgx/v5/stdlib"
 	"github.com/pressly/goose/v3"
@@ -53,4 +54,23 @@ func MigrateFS(db *sql.DB, migrationsFS fs.FS, dir string) error {
 	}()
 
 	return Migrate(db, dir)
+}
+
+func SetupTestDB(t *testing.T) *sql.DB {
+	db, err := sql.Open("pgx", "host=localhost user=postgres password=postgres dbname=postgres port=5433 sslmode=disable")
+
+	if err != nil {
+		t.Fatalf("open db failed: %v", err)
+	}
+
+	// run the migrations
+	if err := Migrate(db, "../migrations"); err != nil {
+		t.Fatalf("migrating test db failed: %v", err)
+	}
+
+	if _, err := db.Exec(`BEGIN TRANSACTION; DELETE FROM users; DELETE FROM user_subscriptions; COMMIT`); err != nil {
+		t.Fatalf("truncating db failed: %v", err)
+	}
+
+	return db
 }
