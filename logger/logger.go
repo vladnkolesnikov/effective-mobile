@@ -16,5 +16,5 @@ func LogInfo(msg string) {
 }
 
 func LogFatal(err error) {
-	logger.Printf("[FATAL] %v", err)
+	logger.Fatalf("[FATAL] %v", err)
 }
